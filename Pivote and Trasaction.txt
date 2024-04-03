@@ -1,0 +1,33 @@
+--Pivote
+
+SELECT *
+FROM (
+    SELECT section, pname, price
+    FROM products
+) AS SourceTable
+PIVOT (
+    MAX(price)
+    FOR section IN ([Farming], [Finance], [Sales])
+) AS PivotTable;
+
+select * from Client
+
+SELECT * FROM( SELECT cname,budget,address,section from Client)
+as SounceTable PIVOT(max(budget) for address in ([Mumbai],[Pune],[Nashik],[Delhi],[Chennai]) ) as PivotTable;
+
+
+--TRANSACTION
+
+BEGIN TRANSACTION;
+
+-- Insert a new record into the products table
+INSERT INTO products (pname, employees, price, section)
+VALUES ('New Product', 5, 50000, 'Sales');
+
+-- Update a record in the Client table
+UPDATE Client
+SET budget = 90000
+WHERE cname = 'farmacare';
+ROLLBACK
+-- If everything is successful, commit the transaction
+COMMIT;
