@@ -1,0 +1,102 @@
+--STORE PROCEDURE
+
+CREATE PROCEDURE viewer @price int
+AS
+BEGIN
+SELECT pname FROM products where
+price=@price;
+END
+
+
+EXEC viewer @price=40000
+
+EXEC viewer @price=94000
+
+CREATE PROCEDURE priceChanger @newprice int,@product varchar(20)
+AS
+BEGIN
+UPDATE products SET price=@newprice where pname=@product;
+END
+
+EXEC priceChanger @newprice=43000,@product='Wholesale Agency'
+
+select * from products 
+
+--STORE PROCEDURE WITH JOINS
+
+CREATE PROCEDURE productClient 
+AS
+BEGIN
+SELECT p.pname,c.cname FROM 
+products p INNER JOIN Client c 
+ON p.section=c.section;
+END
+
+EXEC productClient
+
+
+--STORE PROCEDURE WITH LIKE OPERATOR
+
+CREATE PROCEDURE nameChecker
+    @letter NVARCHAR
+AS
+BEGIN
+    SELECT *
+    FROM products
+    WHERE pname LIKE @letter + '%';
+END;
+
+
+EXEC nameChecker @letter='M'
+
+EXEC nameChecker @letter='k'
+
+DROP PROCEDURE nameChecker;
+
+
+--USING STORE PROCEDURE CALCULATOR
+
+CREATE PROCEDURE calci
+@num1 int,
+@num2 int,
+@operation varchar(2)
+AS
+BEGIN
+DECLARE @result int
+IF @operation='+'
+BEGIN 
+SET @result=@num1+@num2;
+END
+ELSE IF @operation='-'
+BEGIN 
+SET @result=@num1-@num2;
+END
+ELSE IF @operation='*'
+BEGIN 
+SET @result=@num1*@num2;
+END
+ELSE IF @operation='/'
+BEGIN 
+SET @result=@num1/@num2;
+END
+ELSE
+BEGIN 
+PRINT 'Invalid operation specified.';
+        RETURN;
+END
+SELECT @result as  result;
+END
+
+EXEC calci @num1=10,@num2=20,@operation='+'
+
+EXEC calci @num1=10,@num2=20,@operation='-'
+
+EXEC calci @num1=100,@num2=20,@operation='/'
+
+EXEC calci @num1=10,@num2=20,@operation='*'
+
+
+--BACKUP DATABASE
+
+BACKUP DATABASE shubham
+TO DISK = 'C:\shubham DB\dba.bk';

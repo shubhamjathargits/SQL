@@ -1,0 +1,83 @@
+--JOINS
+
+select pname ,cname from products
+ INNER JOIN Client 
+ ON products.section=Client.section;
+
+select p.pname,p.price,c.budget from products as p LEFT JOIN Client as c ON p.section=c.section;
+
+SELECT p.pname, p.employees, p.price, c.cname
+FROM products p
+INNER JOIN Client c ON p.section = c.section
+WHERE p.section = 'sales';
+
+SELECT c.cname, c.budget, p.pname
+FROM Client c
+LEFT JOIN products p ON c.section = p.section;
+
+SELECT c.cname, SUM(c.budget) AS total_budget, SUM(p.price) AS total_product_price
+FROM Client c
+LEFT JOIN products p ON c.section = p.section
+GROUP BY c.cname;
+
+---UNION
+
+Select cname as Name,cid as id,budget as Rs 
+from Client Union All 
+Select pname as Name,pid as id,price as Rs 
+from products
+
+Select cname as Name,cid as id,budget as Rs 
+from Client Union  
+Select pname as Name,pid as id,price as Rs 
+from products
+
+SELECT section, COUNT(*) AS num_clients
+FROM Client
+GROUP BY section
+HAVING COUNT(*) > 1;
+
+SELECT cname
+FROM Client
+WHERE EXISTS (
+    SELECT 1
+    FROM Client
+    WHERE address = 'Mumbai'
+);
+
+--Between 
+
+select pid,pname,price 
+from products 
+where 
+price between 50000 and 70000
+and pid In(3,4)
+
+delete from products where Exists (Select pid,p.price,cid,c.budget from products as p Inner join Client as c ON p.section=c.section where p.price<c.budget);
+select * from products; 
+
+DELETE FROM products
+WHERE price > (
+    SELECT budget
+    FROM Client
+    
+);
+
+--Delete Client Whoes Budget is Less than Product Price
+
+DELETE c
+FROM products p
+INNER JOIN Client c ON p.section = c.section
+WHERE p.price > c.budget;
+
+
+insert into products values('abc shope', 4,140000,'sales') 
+
+select * from products
+
+--Reduce Product price which price is so much Greater than client Budget
+
+Update products set price = 44000 where pid IN(select p.pid
+FROM products p
+INNER JOIN Client c ON p.section = c.section
+WHERE p.price > c.budget)

@@ -1,0 +1,97 @@
+--TRIGGER
+
+
+--Here we create the trigger that stored the data of newly inserted product with time
+
+CREATE TRIGGER log_products_insert
+ON products
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO product_log (action, product_name, action_time)
+    SELECT 'Product Added', inserted.pname, GETDATE()
+    FROM inserted;
+END;
+ CREATE TABLE product_log (
+    log_id INT IDENTITY(1,1) PRIMARY KEY,
+    action VARCHAR(50),
+    product_name VARCHAR(100),
+    action_time DATETIME
+);
+
+ 
+ select * from products;
+ insert into products values('mass money',3,94000,'finance')
+ insert into products values('UnityBank',11,564000,'Banking')
+ 
+ select * from product_log
+ 
+ 
+ --Here we create Trigger that Stores data of all past deleted product with time
+
+CREATE TRIGGER delete_product_log ON products
+AFTER DELETE
+AS
+BEGIN
+
+INSERT INTO Delete_log (action, product_name, action_time)
+SELECT 'Product Deleted', deleted.pname, GETDATE() 
+    FROM deleted;
+END;
+
+ CREATE TABLE Delete_log (
+    log_id INT IDENTITY(1,1) PRIMARY KEY,
+    action VARCHAR(50),
+    product_name VARCHAR(100),
+    action_time DATETIME
+);
+
+delete from products where pid=26
+
+select * from products
+
+select * from delete_log
+
+
+create table history(log_id INT IDENTITY(1,1) PRIMARY KEY,
+    action VARCHAR(50),
+    product_name VARCHAR(100),
+    emploees INT,
+    product_price INT,
+    section VARCHAR(20))
+    
+    SELECT * FROM products
+    
+    UPDATE products SET price=73000 WHERE pid=21
+
+    select * from history
+   
+--Here we Create trigger that stores the data of newly Updated Product
+
+
+CREATE TRIGGER Update_product_log
+ON products
+AFTER UPDATE 
+AS
+BEGIN
+    INSERT INTO history (action, product_name, emploees, product_price, section)
+    SELECT 'Updated Product', inserted.pname, inserted.employees, inserted.price, inserted.section
+    FROM inserted;
+END
+
+--Here we create a Trigger that store the  updated columns whoes past data 
+
+CREATE TRIGGER Update_products_log
+ON products
+AFTER UPDATE 
+AS
+BEGIN
+    INSERT INTO history (action, product_name, emploees, product_price, section)
+    SELECT 'Unupdated Product', deleted.pname, deleted.employees, deleted.price, deleted.section
+    FROM deleted;
+END;
+
+DROP TRIGGER Update_product_log;
+
+DELETE FROM history;

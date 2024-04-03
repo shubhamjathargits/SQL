@@ -1,0 +1,44 @@
+--CONCATANATION
+
+SELECT 'SHUBHAM'+' '+ 'JATHAR'
+
+select * from products;
+
+select pname +' : ' + section as ManabhProduct from products
+
+select 'The Employees Works On ' +pname+' is '+CAST(employees AS VARCHAR(10)) AS Employees_Information from products
+
+
+
+--REPLACE
+
+select REPLACE(pname,'abc','XYZ') as Updated_products from products
+
+select REPLACE('A1 Software','A1','S1')
+
+
+
+--SUB-QUERIES
+insert into Client values('mass bank',66000,'USA','Bamking')
+select * from Client
+
+select * from products
+
+update products set price=160000 where pid=27
+
+Delete from Client where section not in ( Select section from products)
+
+Update products set price=88000 where price > ( select Min(budget) from Client)
+
+UPDATE products
+SET price = 88000
+WHERE price > (SELECT MAX(budget) FROM Client);
+
+update Client set budget=220000 where cid=5
+
+select * from Client where budget > (
+SELECT TOP 1  SUM(price) AS total_spent
+FROM Client
+JOIN products ON Client.section = products.section
+GROUP BY cid 
+ORDER BY total_spent DESC)
